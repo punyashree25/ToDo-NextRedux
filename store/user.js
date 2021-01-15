@@ -6,7 +6,6 @@ export const addUser = createAsyncThunk(
   'user/register',
   async(userData, thunkAPI) => {
     try {
-      console.log(userData);
       const response = await axios(
         '/user/register',
         {
@@ -14,7 +13,6 @@ export const addUser = createAsyncThunk(
           data: userData
         }
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.log(error.message);
@@ -34,8 +32,6 @@ export const loginUser = createAsyncThunk(
           data: loginData
         }
       )
-      Cookies.set('token', response.data.token);
-      console.log(response);
       return response.data;
     } catch (error) {
       console.log(error.message)
@@ -77,11 +73,7 @@ export const getUser = createAsyncThunk(
   }
 )
 
-export const updateUser = createAsyncThunk()
-
-export const deleteUser = createAsyncThunk()
-
-const cookieToken = Cookies.get('company');
+const cookieToken = Cookies.get('token');
 
 const userSlice = createSlice({
   name: 'user',
@@ -95,6 +87,12 @@ const userSlice = createSlice({
     loading: (state, action) => {
       state.loading = action.payload;
     },
+    token: (state, action) => {
+      if (action.payload) {
+        Cookies.set('token', JSON.stringify(action.payload))
+      }
+      state.token = action.payload;
+  },
   },
   extraReducers: {
     [addUser.pending]: (state) => {
@@ -117,7 +115,7 @@ const userSlice = createSlice({
       state.loading = true;
     },
     [loginUser.fulfilled]: (state, action) => {
-      state.user = action.payload.user;
+      state.user = action.payload;
       state.loading = false;
       state.success = "User Logged in";
     },
@@ -144,8 +142,19 @@ const userSlice = createSlice({
     },
     [logoutUser.rejected]: (state, action) => {
         state.error = action.payload.error
-    },
+    }
   }
 })
+
+export const {
+  token,
+} = userSlice.actions
+
+export const setToken = () => (dispatch, state) => {
+  const user = state().user.user;
+  if (user.token) {
+    dispatch(token(user.token))
+  }
+}
 
 export default userSlice.reducer

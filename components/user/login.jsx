@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from '../../styles/Home.module.css'
 import { Button, Form, Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector} from 'react-redux'
-import { addUser, loginUser, getUser, logoutUser } from '../../store/user'
-
+import { useRouter } from 'next/router'
+import { addUser, loginUser, getUser, logoutUser, setToken } from '../../store/user'
 
 const validationsLogin = {
   email: {
@@ -31,6 +31,7 @@ const validationsRegister = {
 }
 
 const Login = () => {
+  const router = useRouter()
   const {register, handleSubmit, errors} = useForm()
   const { register: registerLogin,
           errors: errorsLogin,
@@ -38,7 +39,7 @@ const Login = () => {
         } = useForm()
 
   const dispatch = useDispatch()
-  const { loading, error} = useSelector(state => state.user)
+  const { loading, error, token} = useSelector(state => state.user)
 
   const userLogin = data => {
     dispatch(loginUser(data))
@@ -56,6 +57,16 @@ const Login = () => {
     dispatch(getUser())
   }
 
+  useEffect(() => {
+    dispatch(setToken())
+  }, [loading])
+
+  useEffect(() => {
+    if (token.length > 0) {
+      router.push('/')
+    }
+  }, [token])
+
   return (
     <Container className={styles.container}>
       <Row>
@@ -63,13 +74,11 @@ const Login = () => {
           <h1 className={styles.title}>
             Welcome to ToDo App
           </h1>
-
           <p className={styles.description}>
             Get started by logging in
           </p>
         </Col>
       </Row>
-
       <Row>
         <Col>
           <Form id="loginForm" onSubmit={handleSubmitLogin(data => userLogin(data))}>
@@ -113,6 +122,8 @@ const Login = () => {
             </Button>
           </Form>
         </Col>
+      </Row>
+      <Row>
         <Col>
           <Button variant="primary" onClick={userLogout}>
             Click to Logout
