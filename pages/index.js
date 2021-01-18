@@ -1,13 +1,12 @@
 import React from 'react';
-// import privateRoute from '../hoc/privateRoute';
 import Layout from '../layout/index'
 
 const IndexPage = (props) => {
-    return (
-        <Layout>
-            <h1>Welcome to To-Do</h1>
-        </Layout>
-    )
+  return (
+    <Layout>
+        <h1>Welcome to To-Do</h1>
+    </Layout>
+  )
 }
 
 export default IndexPage;

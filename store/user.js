@@ -1,6 +1,7 @@
 import axios from '../lib/axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import Cookies from 'js-cookie'
+import { logoutUser } from './actions'
 
 export const addUser = createAsyncThunk(
   'user/register',
@@ -40,32 +41,11 @@ export const loginUser = createAsyncThunk(
   }
 )
 
-export const logoutUser = createAsyncThunk(
-  'user/logout',
-  async(thunkAPI) => {
-    try {
-      const response = await axios(
-        '/user/logout',
-        {
-          method: 'POST'
-        }
-      )
-      console.log(response.data);
-      Cookies.remove('token')
-      return response.data
-    } catch (error) {
-      console.log(error.message)
-      return thunkAPI.rejectWithValue({ error: error.message })
-    }
-  }
-)
-
 export const getUser = createAsyncThunk(
   'user/me',
   async(_, thunkAPI) => {
     try {
       const response = await axios('/user/me');
-      console.log(response.data);
       return response.data;
     } catch (error) {
         return thunkAPI.rejectWithValue({ error: error.message })
@@ -80,7 +60,7 @@ const userSlice = createSlice({
   initialState: {
     loading: true,
     user: {},
-    token: cookieToken ? JSON.parse(cookieToken) : {},
+    token: cookieToken ? cookieToken : {},
     error: {}
   },
   reducers: {
@@ -89,7 +69,7 @@ const userSlice = createSlice({
     },
     token: (state, action) => {
       if (action.payload) {
-        Cookies.set('token', JSON.stringify(action.payload))
+        Cookies.set('token', action.payload)
       }
       state.token = action.payload;
   },
@@ -116,11 +96,11 @@ const userSlice = createSlice({
     },
     [loginUser.fulfilled]: (state, action) => {
       state.user = action.payload;
-      state.loading = false;
-      state.success = "User Logged in";
+      state.loading = false
+      state.success = "User Logged in"
     },
     [loginUser.rejected]: (state, action) => {
-      state.error = action.payload.error;
+      state.error = action.payload.error
       state.loading = false;
     },
     [getUser.pending]: (state) => {
@@ -141,7 +121,7 @@ const userSlice = createSlice({
         state.loading = false;
     },
     [logoutUser.rejected]: (state, action) => {
-        state.error = action.payload.error
+      state.error = action.error
     }
   }
 })

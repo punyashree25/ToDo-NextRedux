@@ -4,7 +4,8 @@ import { Button, Form, Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector} from 'react-redux'
 import { useRouter } from 'next/router'
-import { addUser, loginUser, getUser, logoutUser, setToken } from '../../store/user'
+import { addUser, loginUser, getUser,  setToken } from '../../store/user'
+import {logoutUser} from '../../store/actions'
 
 const validationsLogin = {
   email: {
