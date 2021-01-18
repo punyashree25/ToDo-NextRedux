@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
-import styles from '../../styles/Home.module.css'
+import styles from '../../styles/general.module.css'
 import { Button, Form, Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector} from 'react-redux'
 import { useRouter } from 'next/router'
-import { addUser, loginUser, getUser, logoutUser, setToken } from '../../store/user'
+import { addUser, loginUser, getUser, setToken } from '../../store/user'
 
 const validationsLogin = {
   email: {
@@ -47,10 +47,6 @@ const Login = () => {
 
   const registerUser = data => {
     dispatch(addUser(data))
-  }
-
-  const userLogout = () => {
-    dispatch(logoutUser())
   }
 
   const fetchUser = () => {
@@ -124,11 +120,6 @@ const Login = () => {
         </Col>
       </Row>
       <Row>
-        <Col>
-          <Button variant="primary" onClick={userLogout}>
-            Click to Logout
-          </Button>
-        </Col>
         <Col>
           <Button variant="primary" onClick={fetchUser}>
             Click to Fetch user
