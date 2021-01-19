@@ -1,7 +1,11 @@
+import React, { useEffect } from 'react'
 import styles from '../../styles/Home.module.css'
 import { Button, Form, Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
-
+import { useDispatch, useSelector} from 'react-redux'
+import { useRouter } from 'next/router'
+import { addUser, loginUser, getUser,  setToken } from '../../store/user'
+import {logoutUser} from '../../store/actions'
 
 const validationsLogin = {
   email: {
@@ -28,21 +32,41 @@ const validationsRegister = {
 }
 
 const Login = () => {
-
+  const router = useRouter()
   const {register, handleSubmit, errors} = useForm()
   const { register: registerLogin,
           errors: errorsLogin,
           handleSubmit: handleSubmitLogin
         } = useForm()
 
+  const dispatch = useDispatch()
+  const { loading, error, token} = useSelector(state => state.user)
 
-  const loginUser = data => {
-    console.log(data);
+  const userLogin = data => {
+    dispatch(loginUser(data))
   }
 
   const registerUser = data => {
-    console.log(data);
+    dispatch(addUser(data))
   }
+
+  const userLogout = () => {
+    dispatch(logoutUser())
+  }
+
+  const fetchUser = () => {
+    dispatch(getUser())
+  }
+
+  useEffect(() => {
+    dispatch(setToken())
+  }, [loading])
+
+  useEffect(() => {
+    if (token.length > 0) {
+      router.push('/')
+    }
+  }, [token])
 
   return (
     <Container className={styles.container}>
@@ -51,17 +75,15 @@ const Login = () => {
           <h1 className={styles.title}>
             Welcome to ToDo App
           </h1>
-
           <p className={styles.description}>
             Get started by logging in
           </p>
         </Col>
       </Row>
-
       <Row>
         <Col>
-          <Form id="loginForm" onSubmit={handleSubmitLogin(data => loginUser(data))}>
-            <Form.Group controlId="password">
+          <Form id="loginForm" onSubmit={handleSubmitLogin(data => userLogin(data))}>
+            <Form.Group controlId="email">
               <Form.Label>Email address</Form.Label>
               <Form.Control type="email" name="email" placeholder="Enter email" ref = { registerLogin(validationsLogin.email) }/>
             </Form.Group>
@@ -100,6 +122,18 @@ const Login = () => {
               Click to Register
             </Button>
           </Form>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Button variant="primary" onClick={userLogout}>
+            Click to Logout
+          </Button>
+        </Col>
+        <Col>
+          <Button variant="primary" onClick={fetchUser}>
+            Click to Fetch user
+          </Button>
         </Col>
       </Row>
     </Container>

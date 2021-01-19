@@ -1,16 +1,13 @@
 import '../styles/globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Provider } from 'react-redux'
-// import store from '../store'
+import store from '../store'
 
 import Head from 'next/head'
-import Header from '../layout/Header'
-import Footer from '../layout/Footer'
 
 function MyApp({ Component, pageProps }) {
   return (
-    <div>
-      {/* Replace div with Provider once store file is updated and stores are added */}
+    <Provider store={store}>
       <Head>
         <title>To Do App</title>
         <link rel="icon" href="/favicon.ico" />
@@ -21,7 +18,7 @@ function MyApp({ Component, pageProps }) {
         />
       </Head>
       <Component {...pageProps} />
-    </div>
+    </Provider>
   )
 }
 
