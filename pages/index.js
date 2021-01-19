@@ -4,13 +4,12 @@ import Home from "../components/task/index"
 
 
 const IndexPage = (props) => {
-  console.log(props);
-    return (
-        <Layout>
-            <h1>Welcome to To-Do</h1>
-            <Home />
-        </Layout>
-    )
+  return (
+    <Layout>
+      <h1>Welcome to To-Do</h1>
+      <Home />
+    </Layout>
+  )
 }
 
 export default IndexPage;
