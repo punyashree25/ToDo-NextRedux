@@ -1,7 +1,7 @@
 import { Button, Container, Row, Col } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import styles from '../styles/general.module.css'
-import { logoutUser } from '../../store/actions'
+import { logoutUser } from '../store/actions'
 
 export default function Header () {
   const dispatch = useDispatch()
