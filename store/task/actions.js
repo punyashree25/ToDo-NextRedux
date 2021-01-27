@@ -4,8 +4,6 @@ import {
   ACTION_DELETE_TASK,
   ACTION_GET_ALL_TASKS,
   ACTION_GET_COMPLETED_TASKS,
-  ACTION_GET_PAGE_TASKS,
-  ACTION_GET_TASK,
   ACTION_UPDATE_TASK_API_STATUS
 } from './action_types'
 import {
@@ -15,13 +13,11 @@ import {
   TASK_API_FAILED
 } from './api_status'
 import axios from 'axios'
-import axios_s from '../../lib/axios'
 
 import { axiosSetup } from '../../lib/axios-settings'
-
 axiosSetup();
 
-const initateTaskRequest = () => {
+const initiateTaskRequest = () => {
   return {
     type: ACTION_UPDATE_TASK_API_STATUS,
     data: {
@@ -57,30 +53,53 @@ export const resetProfileApiStatus = function () {
   }
 }
 
-
 export const addTask = (task) => {
   return (dispatch) => {
-    dispatch(initateTaskRequest())
-    console.log(task);
+    dispatch(initiateTaskRequest())
     return axios
       .post('task', {
         ...task
       })
       .then((response) => {
-        console.log(response);
         dispatch(completeTaskRequest())
+        dispatch(getAllTasks())
         const { data } = response
         dispatch({
           type: ACTION_ADD_TASK,
           data: {
-            ...data,
             task: data.data
           }
         })
         return response
       })
       .catch((error) => {
-        console.log(error.response);
+        console.log(error);
+        dispatch(failedTaskRequest())
+      })
+  }
+}
+
+export const updateTask = (task) => {
+  return (dispatch) => {
+    dispatch(initiateTaskRequest())
+    return axios
+      .put('task/' + task.id, {
+        completed: task.completed
+      })
+      .then((response) => {
+        dispatch(completeTaskRequest())
+        dispatch(getAllTasks())
+        const { data } = response
+        dispatch({
+          type: ACTION_UPDATE_TASK,
+          data: {
+            task: data.data
+          }
+        })
+        return response
+      })
+      .catch((error) => {
+        console.log(error);
         dispatch(failedTaskRequest())
       })
   }
@@ -88,24 +107,72 @@ export const addTask = (task) => {
 
 export const getAllTasks = () => {
   return (dispatch) => {
-    dispatch(initateTaskRequest())
+    dispatch(initiateTaskRequest())
     return axios
       .get('/task')
-      .then(() => {
-        console.log(response);
+      .then((response) => {
         dispatch(completeTaskRequest())
         const { data } = response
         dispatch({
           type: ACTION_GET_ALL_TASKS,
           data: {
-            ...data,
-            task: data.data,
-            count: data.count
+            tasks: data.data,
+            taskCount: data.count
           }
         })
         return response
       })
       .catch(() => {
+        dispatch(failedTaskRequest())
+      })
+  }
+}
+
+export const getTasksByStatus = (status) => {
+  return (dispatch) => {
+    dispatch(initiateTaskRequest())
+    return axios
+      .get('/task', {
+        params: {
+          completed: status
+        }
+      })
+      .then((response) => {
+        dispatch(completeTaskRequest())
+        const { data } = response
+        dispatch({
+          type: ACTION_GET_COMPLETED_TASKS,
+          data: {
+            tasks: data.data,
+            taskCount: data.count
+          }
+        })
+        return response
+      })
+      .catch(() => {
+        dispatch(failedTaskRequest())
+      })
+  }
+}
+
+export const deleteTask = (id) => {
+  return (dispatch) => {
+    dispatch(initiateTaskRequest)
+    return axios
+      .delete('task/' + id)
+      .then((response => {
+        dispatch(completeTaskRequest())
+        dispatch(getAllTasks())
+        dispatch({
+          type: ACTION_DELETE_TASK,
+          data: {
+            task: response.data
+          }
+        })
+        return response
+      }))
+      .catch((error) => {
+        console.log(error);
         dispatch(failedTaskRequest())
       })
   }

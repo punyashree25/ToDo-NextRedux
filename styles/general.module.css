@@ -132,3 +132,7 @@
 .header {
   border-bottom: 1px solid #eaeaea;
 }
+
+.taskRows {
+  margin: 20px auto;
+}

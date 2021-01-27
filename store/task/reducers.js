@@ -15,40 +15,46 @@ const initialState = {
   taskCount: 0
 }
 
-function task(state = initialState, action) {
+export default function tasks (state = initialState, action) {
   const { data, type } = action
+
   switch (type) {
     case ACTION_ADD_TASK:
-      const { task, count } = data
+      const { task } = data
       let { tasks } = state
-      const updatedTasks = [...tasks, task]
       return {
         ...state,
-        tasks: updatedTasks,
-        task,
-        count
+        task: task,
       }
+      break;
     case ACTION_UPDATE_TASK:
+      let { updatedtask } = data.task
+      return {
+        ...state,
+        task: updatedtask,
+      }
       break;
 
     case ACTION_DELETE_TASK:
-
+      return {
+        ...state,
+        task: {}
+      }
       break;
 
     case ACTION_GET_ALL_TASKS:
-
+      return {
+        ...state,
+        tasks: data.tasks,
+        taskCount: data.taskCount
+      }
       break;
-
     case ACTION_GET_COMPLETED_TASKS:
-
-      break;
-
-    case ACTION_GET_PAGE_TASKS:
-
-      break;
-
-    case ACTION_GET_TASK:
-
+      return {
+        ...state,
+        tasks: data.tasks,
+        taskCount: data.taskCount
+      }
       break;
 
     case ACTION_UPDATE_TASK_API_STATUS:
@@ -61,5 +67,3 @@ function task(state = initialState, action) {
       return state
   }
 }
-
-export default task
