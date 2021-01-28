@@ -4,6 +4,9 @@ import { Provider } from 'react-redux'
 import store from '../store'
 import Head from 'next/head'
 
+import { axiosSetup } from '../lib/axios-settings'
+axiosSetup()
+
 function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>

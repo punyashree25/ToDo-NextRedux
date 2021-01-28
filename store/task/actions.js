@@ -14,9 +14,6 @@ import {
 } from './api_status'
 import axios from 'axios'
 
-import { axiosSetup } from '../../lib/axios-settings'
-axiosSetup();
-
 const initiateTaskRequest = () => {
   return {
     type: ACTION_UPDATE_TASK_API_STATUS,
