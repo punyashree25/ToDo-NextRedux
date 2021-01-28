@@ -120,3 +120,19 @@
     flex-direction: column;
   }
 }
+
+.right {
+  text-align: right;
+}
+
+.format {
+  margin: 10px 10px;
+}
+
+.header {
+  border-bottom: 1px solid #eaeaea;
+}
+
+.taskRows {
+  margin: 20px auto;
+}
